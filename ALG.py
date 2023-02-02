@@ -304,6 +304,7 @@ def Finder_IETE(time1, time_name1, start1):
         if accept == True:
             moyenne_epaule1 = ((I[1] - B) + (C - B)) / 2
             moyenne_epaule2 = ((E - F) + (J[1] - F)) / 2
+            moyenne_des_epaule = ((E - F) + (J[1] - F)) + ((E - F) + (J[1] - F)) / 4
             moyenne_tete = ((C - D) + (E - D)) / 2
 
             tuche = 0
@@ -316,19 +317,35 @@ def Finder_IETE(time1, time_name1, start1):
                 df['c'].values[-2] <= J[1] + (moyenne_tete) / 4 and df['c'].values[-2] >= J[1] and df['c'].values[-1] <= \
                 J[1] + (moyenne_tete) / 4 and df['c'].values[-1] >= J[1]:
 
+            note = 0
+            pourcentage_10_tete = (10 * (E - C))/100
+            pourcentage_10_ep1 = (10 * (C - I[0])) / 100
+            pourcentage_10_ep2 = (10 * (J[0] - E)) / 100
+            pourcentage_20_moy_epaule = (20 * moyenne_des_epaule) / 100
 
+            if D < (C + E)/2 + pourcentage_10_tete and D > (C + E)/2 - pourcentage_10_tete :
+                note = note + 3
+
+            if B < (I[0] + C)/2 + pourcentage_10_ep1 and B > (I[0] + C)/2 - pourcentage_10_ep1:
+                note = note + 1
+
+            if F < (J[0] + E)/2 + pourcentage_10_ep2 and F > (J[0] + E)/2 - pourcentage_10_ep2:
+                note = note + 1
+
+            if moyenne_epaule1 < moyenne_des_epaule + pourcentage_20_moy_epaule and moyenne_epaule1 > moyenne_des_epaule - pourcentage_20_moy_epaule and moyenne_epaule2 < moyenne_des_epaule + pourcentage_20_moy_epaule and moyenne_epaule2 > moyenne_des_epaule - pourcentage_20_moy_epaule :
+                note = note + 1
 
             #playsound('note.wav')
             plus_grand = round((J[1] + (moyenne_tete) / 2), 5)
             plus_petit = round(G, 5)
             pourcent_chercher = ((plus_grand - plus_petit) / plus_petit)*100
-            pourcent_chercher = round(pourcent_chercher, 3)
+            pourcent_chercher = round(pourcent_chercher, 2)
             pourcent_perdu = ((round(G, 5)-round(F, 5))*100)/round(G, 5)
-            pourcent_perdu = round(pourcent_perdu, 3)
+            pourcent_perdu = round(pourcent_perdu, 2)
             fig = plt.figure(figsize=(10, 7))
             # fig.patch.set_facecolor('#17abde'
             plt.plot([], [], ' ')
-            plt.title(f'IETE : {tiker_live} | {time1} {time_name1} | +{pourcent_chercher}% | -{pourcent_perdu}%', fontweight="bold", color='black')
+            plt.title(f'IETE : {tiker_live} | {time1} {time_name1} | +{pourcent_chercher}% | -{pourcent_perdu}% | {note}/6', fontweight="bold", color='black')
             mirande3['c'].plot(color=['blue'], label='Clotures')
             # mirande['c'].plot(color=['#FF0000'])
             mirande2['c'].plot(color=['green'], linestyle='--', label='Ligne de coup')
